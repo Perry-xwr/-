@@ -1,0 +1,46 @@
+package com.neusoft.elmboot.mapper;
+
+import com.neusoft.elmboot.po.Credit;
+import org.apache.ibatis.annotations.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+
+@Mapper
+public interface CreditMapper {
+    //get total credit by userId and not deleted
+    @Select("select * from credit_copy where userId=#{userId} and deleted=0")
+    public List<Credit> getTotalCreditByUserId(@Param("userId") String userId);
+
+    //get credit by userId
+    @Select("select * from credit where userId=#{userId}")
+    public List<Credit> getCreditByUserId(String userId);
+
+    //get credit by userId and channelType
+    @Select("select * from credit where userId=#{userId} and channelType=#{channelType}")
+    public List<Credit> getCreditByUserIdAndChannelType(String userId, int channelType);
+
+    //insert credit
+    @Insert("insert into credit(userId, creditNum, channelType, createTime,expiredTime) values(#{userId}, #{creditNum}, #{channelType}, #{createTime},#{expiredTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "creditId", keyColumn = "creditId")
+    public int insertCredit(Credit credit);
+
+    @Insert("insert into credit_copy(userId, creditNum, channelType, createTime,expiredTime,deleted) values(#{userId}, #{creditNum}, #{channelType}, #{createTime},#{expiredTime},0)")
+    @Options(useGeneratedKeys = true, keyProperty = "creditId", keyColumn = "creditId")
+    public int insertCreditCopy(Credit credit);
+
+    //update credit_copy deleted=1 by creditId
+    @Update("update credit_copy set deleted=1 where creditId=#{creditId}")
+    public int deleteCreditCopyByCreditId(int creditId);
+
+    //update credit_copy set num=leftnum by creditId
+    @Update("update credit_copy set creditNum=#{leftNum} where creditId=#{creditId}")
+    public int updateCreditCopyByCreditId(int creditId, int leftNum);
+
+    @Update("update credit_copy set deleted=1 where creditId=#{creditId}")
+    int delCredit(Integer creditId);
+
+    @Update("update credit_copy set creditNum=#{num} where creditId=#{creditId}")
+    int updCredit(Integer creditId, BigDecimal num);
+}

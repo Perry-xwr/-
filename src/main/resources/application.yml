@@ -1,0 +1,21 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /elm
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/elm?characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: ABCDxiaowenrui1
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.neusoft.elmboot.po
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 配置sql注入关键字
+sql:
+  keywords: ;|'|"|\|--|_|\*|%|#|//|\+|=|or|and|like|select|insert|update|delete|alert|drop|truncate|declare|exec|execute|create|xp_|sp_|0x
